@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>父子传递</title>
+    <script type="text/javascript" src="vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <h1>我是根组件</h1>
+        <hr/>
+        <parent></parent>
+    </div>
+</body>
+</html>
+<!--父组件的内容-->
+<template id="parent">
+    <div>
+        <h2>我是父组件，我收到:{{childData}}</h2>
+        <child ref="child"></child>
+    </div>
+</template>
+<!--子组件的内容-->
+<template id="child">
+    <h3>我是子组件，我收到:{{parentData}}</h3>
+</template>
+<script type="text/javascript">
+    //定义组件
+    //1. 定义子组件
+    let child = {
+        template : '#child',
+        data : function(){
+            return {
+                msg : '子组件数据',
+                parentData : ''
+            }
+        },
+        methods : {
+            show : function(){
+                alert('我是子方法');
+            }
+        },
+        mounted : function(){
+            this.parentData = this.$parent.msg;
+            this.$parent.show();
+        }
+    };
+    //2. 定义父组件
+    let parent = {
+        template : '#parent',
+        data : function(){
+            return {
+                msg : '父组件数据',
+                childData : ''
+            }
+        },
+        components : {
+            child
+        },
+        mounted : function(){
+            this.childData = this.$refs.child.msg;
+            this.$refs.child.show();
+        },
+        methods : {
+            show : function(){
+                alert('我是父方法')
+            }
+        }
+    };
+    new Vue({
+        el : '#box',
+        data : {},
+        methods : {},
+        computed : {},
+        filters : {},
+        directives : {},
+        components : {
+            parent
+        },
+        watch : {},
+        props : {}
+    })
+</script>

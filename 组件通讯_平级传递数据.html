@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件通讯_平级传递数据</title>
+    <script type="text/javascript" src="vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <aa></aa>
+        <bb></bb>
+        <cc></cc>
+    </div>
+</body>
+</html>
+
+<!--组件内容-->
+<template id="aa">
+    <h2 @click="send">我是aa组件内容</h2>
+</template>
+<template id="bb">
+    <h2 @click="send">我是bb组件内容</h2>
+</template>
+<template id="cc">
+    <h2>我是cc组件内容,我收到aa:{{msgaa}},<br/>我收到bb:{{msgbb}}</h2>
+</template>
+
+<script type="text/javascript">
+    var Event = new Vue();
+    let aa = {
+        template : '#aa',
+        data : function(){
+            return {
+                msg : 'aa组件数据'
+            }
+        },
+        methods : {
+            send : function(){
+                Event.$emit('to-cc',this.msg);
+            }
+        }
+    };
+    let bb = {
+        template : '#bb',
+        data : function(){
+            return {
+                msg : 'bb组件数据'
+            }
+        },
+        methods : {
+            send : function(){
+                Event.$emit('to-cc-too',this.msg);
+            }
+        }
+    };
+    let cc = {
+        template : '#cc',
+        data : function(){
+            return {
+                msgaa : '...',
+                msgbb : '...'
+            }
+        },
+        mounted : function(){
+            Event.$on('to-cc',(aaData)=>{
+                alert('aa发送的数据:'+aaData);
+                this.msgaa = aaData;
+            });
+            Event.$on('to-cc-too',(bbData)=>{
+                alert('bb发送的数据:'+bbData);
+                this.msgbb = bbData;
+            });
+
+        }
+    };
+    new Vue({
+        el : '#box',
+        data : {},
+        methods : {},
+        computed : {},
+        filters : {},
+        components : {
+            aa,bb,cc
+        },
+        watch : {},
+        directives : {},
+        props : []
+    })
+</script>

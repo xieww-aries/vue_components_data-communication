@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件通讯2_子传父</title>
+    <script type="text/javascript" src="vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <h1>我是根组件</h1>
+        <parent></parent>
+    </div>
+</body>
+</html>
+
+<!--parent-->
+<template id="parent">
+    <div>
+        <h2>我是父组件的内容，我收到:{{msgChild}}</h2>
+        <child @to-parent="getChildData" :m="msg"></child>
+    </div>
+</template>
+
+<!--child-->
+<template id="child">
+    <h3>我是子组件的内容,我收到:{{m}}</h3>
+</template>
+
+<script type="text/javascript">
+    //定义组件
+    let child = {
+        template : '#child',
+        data : function(){
+            return {
+                msg : '子组件数据'
+            }
+        },
+        mounted : function(){
+            this.$emit('to-parent',this.msg);
+        },
+        props : ['m']
+    };
+    let parent = {
+        template : '#parent',
+        data : function(){
+            return {
+                msg : '父组件数据',
+                msgChild : ''
+            }
+        },
+        components : {
+            child
+        },
+        methods : {
+            getChildData : function(childData){
+                this.msgChild = childData;
+            }
+        }
+    };
+
+    //根组件
+    new Vue({
+        el : '#box',
+        data : {
+            msg : ''
+        },
+        methods : {},
+        computed : {},
+        filters : {},
+        components : {
+            parent
+        },
+        watch : {},
+        props : []
+    })
+</script>

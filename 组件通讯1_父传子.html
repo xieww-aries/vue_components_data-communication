@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件通讯1_父传子</title>
+    <script type="text/javascript" src="vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <h1>我是根组件的内容</h1>
+        <sb :m="msg"></sb>
+    </div>
+</body>
+</html>
+
+<template id="sb">
+    <h1>我是子组件的内容，我收到：{{m}}</h1>
+</template>
+
+<script type="text/javascript">
+    //定义组件
+    let sb = {
+        template : '#sb',
+        data : function(){
+            return {
+                msg : '我是组件sb'
+            }
+        },
+        props : ['m']
+    };
+    new Vue({
+        el : '#box',
+        data : {
+            msg : '根组件哦'
+        },
+        methods : {}, //普通方法
+        computed : {},//计算属性
+        filters : {},//过滤
+        directives : {},//自定义指定
+        components : {
+            sb
+        },//组件
+        watch : {}, //监听
+        props : []
+    })
+</script>
